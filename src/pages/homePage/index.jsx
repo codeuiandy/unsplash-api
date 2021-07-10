@@ -5,6 +5,7 @@ import "./home.css";
 import { ResponsivenessContext } from "../../context/responsiveness";
 import { FaHeart, FaThumbsDown, FaMapMarkerAlt } from "react-icons/fa";
 import { httpGet } from "../../AppLib/https";
+import { showLoader, hideLoader } from "../../helpers/loader";
 export default function Index() {
   const {
     setshowSideBar,
@@ -22,9 +23,11 @@ export default function Index() {
     queryPhotos();
   }, [searchStrings]);
   const getPhotos = async () => {
+    showLoader();
     const res = await httpGet(`photos`);
     console.log(res);
     setImages(res);
+    hideLoader();
   };
 
   const queryPhotos = async () => {
@@ -43,12 +46,12 @@ export default function Index() {
   return (
     <Layout>
       <div className="app-grid">
-        {images.map((data) => {
+        {images?.map((data) => {
           return (
             <div
               onclick={() => {
                 setUid(data.id);
-                setActive(!active);
+                setActive(true);
               }}
               onMouseEnter={() => {
                 setUid(data.id);
@@ -68,7 +71,7 @@ export default function Index() {
                 <img src={data?.urls?.small} alt="" />
                 <div
                   className={`active-p-text ${
-                    active && Uid == data.id ? "activeCard" : ""
+                    Uid == data.id ? "activeCard" : ""
                   }`}
                 >
                   <p>
